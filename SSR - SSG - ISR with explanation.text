@@ -1,0 +1,130 @@
+. SSR (Server-Side Rendering)
+SSR means that the HTML of the page is generated on each request on the server side. 
+This is useful when the page content is dynamic and needs to be up-to-date with every request.
+
+
+Explanation:
+getServerSideProps: This function runs on the server and fetches data on every request.
+Pros: Always up-to-date content.
+Cons: Slower response time because the page is rendered on each request.
+
+
+Example:
+// pages/ssr-example.js
+
+import React from 'react';
+
+export async function getServerSideProps() {
+  // Fetch data on each request
+  const res = await fetch('https://jsonplaceholder.typicode.com/posts/1');
+  const data = await res.json();
+
+  return {
+    props: {
+      post: data,
+    },
+  };
+}
+
+const SSRExample = ({ post }) => {
+  return (
+    <div>
+      <h1>SSR Example</h1>
+      <h2>{post.title}</h2>
+      <p>{post.body}</p>
+    </div>
+  );
+};
+
+export default SSRExample;
+
+
+
+###############################################
+SSG (Static Site Generation)
+SSG pre-renders pages at build time.
+ It is useful when you have pages that don't change often or when you can pre-render pages before the user requests them.
+
+
+
+ Explanation:
+getStaticProps: This function runs at build time, fetching the data once, and generates static HTML.
+Pros: Very fast because the HTML is pre-rendered and served from a CDN.
+Cons: Content may become outdated until the next build.
+
+
+Example:
+// pages/ssg-example.js
+
+import React from 'react';
+
+export async function getStaticProps() {
+  // Fetch data at build time
+  const res = await fetch('https://jsonplaceholder.typicode.com/posts/1');
+  const data = await res.json();
+
+  return {
+    props: {
+      post: data,
+    },
+  };
+}
+
+const SSGExample = ({ post }) => {
+  return (
+    <div>
+      <h1>SSG Example</h1>
+      <h2>{post.title}</h2>
+      <p>{post.body}</p>
+    </div>
+  );
+};
+
+export default SSGExample;
+
+
+
+
+#########################################################
+
+
+ISR (Incremental Static Regeneration)
+ISR allows you to use SSG to generate static pages but with the ability to update or
+ regenerate these pages after a certain amount of time.
+
+Explanation:
+getStaticProps: This function runs at build time, fetching the data once, and generates static HTML.
+revalidate: The page will be regenerated in the background every 10 seconds if a request is made.
+Pros: Combines the benefits of SSG (fast performance) with the ability to keep content updated.
+Cons: Data might still be outdated within the revalidate 
+
+
+Example:
+// pages/isr-example.js
+
+import React from 'react';
+
+export async function getStaticProps() {
+  // Fetch data at build time
+  const res = await fetch('https://jsonplaceholder.typicode.com/posts/1');
+  const data = await res.json();
+
+  return {
+    props: {
+      post: data,
+    },
+    revalidate: 10, // Revalidate the page every 10 seconds
+  };
+}
+
+const ISRExample = ({ post }) => {
+  return (
+    <div>
+      <h1>ISR Example</h1>
+      <h2>{post.title}</h2>
+      <p>{post.body}</p>
+    </div>
+  );
+};
+
+export default ISRExample;
