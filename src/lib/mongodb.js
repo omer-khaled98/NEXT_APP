@@ -1,7 +1,5 @@
 // // import { MongoClient } from "mongodb";
 
-import { MongoClient } from "mongodb";
-
 // // const uri = "mongodb://localhost:27017/";
 // // const client = new MongoClient(uri, {
 // //   useNewUrlParser: true,
@@ -34,6 +32,20 @@ import { MongoClient } from "mongodb";
 // }
 
 // module.exports = { connectToDatabase };
-const mongoClient = new MongoClient("mongodb://localhost:27017/");
-const clientPromise = mongoClient.connect();
+// lib/mongodb.js
+
+import { MongoClient } from "mongodb";
+
+const uri = "mongodb://localhost:27017/";
+const options = {};
+
+let client;
+let clientPromise;
+
+if (!global._mongoClientPromise) {
+  client = new MongoClient(uri, options);
+  global._mongoClientPromise = client.connect();
+}
+clientPromise = global._mongoClientPromise;
+
 export default clientPromise;
